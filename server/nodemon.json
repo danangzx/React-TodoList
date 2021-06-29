@@ -1,0 +1,7 @@
+{
+  "env": {
+    "MONGODB_ATLAS_USERNAME": "danang",
+    "MONGODB_ATLAS_PASSWORD": "W2VObxJYkeekKLk4",
+    "MONGODB_ATLAS_DBNAME": "database"
+  }
+}
