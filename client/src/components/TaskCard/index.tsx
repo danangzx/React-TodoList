@@ -24,12 +24,6 @@ const TaskCard: React.FC<Props> = ({ title, taskId, status }) => {
   const [showUpdateModal, setShowUpdateModal] = useState(false)
   const cache = useQueryCache()
 
-  const [renewTodo] = useMutation(updateTodo, {
-    onSuccess: () => {
-      cache.invalidateQueries('todos')
-    }
-  })
-
   const [removeTodo] = useMutation(deleteTodo, {
     onSuccess: () => {
       cache.invalidateQueries('todos')
@@ -41,17 +35,6 @@ const TaskCard: React.FC<Props> = ({ title, taskId, status }) => {
       cache.invalidateQueries('todos')
     }
   })
-
-  const handleRenewTodo = (type: 'update' | 'cancel' ) => {
-    if(type === 'update'){
-      renewTodo(taskId)
-      setShowUpdateModal(false)
-    }
-    
-    if(type === 'cancel'){
-      setShowUpdateModal(false)
-    }
-  }
 
   const handleRemoveTodo = (type: 'delete' | 'cancel') => {
     if (type === 'delete') {
@@ -119,7 +102,21 @@ const TaskCard: React.FC<Props> = ({ title, taskId, status }) => {
         {isLoading ? (
           <ClockIcon />
           ): (
-          <ChecklistIcon className={checklistStyle} onClick={() => checkTodo(taskId)} />
+          <ChecklistIcon className={checklistStyle} onClick={() => {
+            if (status === 'completed') {
+                checkTodo({
+                    id: taskId, 
+                    title: title,
+                    status: 'uncompleted'
+                });
+            } else {
+                checkTodo({
+                    id: taskId, 
+                    title: title,
+                    status: 'completed'
+                 });
+             }
+         }} />
         )}
       </span>
       <span className={pencilStyle}>
@@ -129,19 +126,11 @@ const TaskCard: React.FC<Props> = ({ title, taskId, status }) => {
         <TrashIcon onClick={() => setShowDeleteModal(true)} />
       </span>
     </div>
-    {/* <UpdateModal 
+    <UpdateModal 
       onClose={() => setShowUpdateModal(false)}
       inProp={showUpdateModal}
       title={title}
       taskId={taskId}
-      // onUpdate={() => handleRenewTodo}
-    /> */}
-    <UpdateModal 
-      inProp={showUpdateModal}
-      title={title}
-      taskId={taskId}
-      onUpdate={() => handleRenewTodo('update')}
-      onCancel={() => handleRenewTodo('cancel')}
     />
     <DeleteModal
       inProp={showDeleteModal}

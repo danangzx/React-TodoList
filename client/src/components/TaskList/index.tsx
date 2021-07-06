@@ -2,6 +2,7 @@ import React from 'react'
 import { useQuery } from 'react-query'
 
 import { getTodos } from 'api/getTodos'
+// import { TodoBody } from '../../types/todos.type'
 
 import TaskCard from 'components/TaskCard'
 
